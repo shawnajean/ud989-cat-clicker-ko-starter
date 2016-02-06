@@ -1,8 +1,11 @@
-var ViewModel = function() {
-  this.clickCount = ko.observable(0);
-  this.name = ko.observable('Turkish');
-  this.imgSrc = ko.observable('https://farm8.staticflickr.com/7160/6672148713_4e2ab31099_b.jpg');
-  this.imgAttribution = ko.observable('https://flic.kr/p/baAvmM');
+var Cat = function( data ) {
+  this.clickCount = ko.observable( data.clickCount );
+  this.name = ko.observable( data.name );
+  this.imgSrc = ko.observable( data.imgSrc );
+  this.imgAttribution = ko.observable( data.imgAttribution );
+
+  this.nicknames = ko.observableArray( data.nicknames );
+
   this.level = ko.computed( function() {
       if( this.clickCount() < 10 ) {
         return "Newborn";
@@ -18,9 +21,22 @@ var ViewModel = function() {
         return "Retired";
       }
   }, this);
+}
 
+var ViewModel = function() {
+  var self = this;
+
+  this.currentCat = ko.observable( new Cat({
+    clickCount: 0,
+    name: 'Turkish',
+    imgSrc: 'https://farm8.staticflickr.com/7160/6672148713_4e2ab31099_b.jpg',
+    imgAttribution: 'https://flic.kr/p/baAvmM',
+    nicknames: [ 'Turk', 'Turkey', 'Mr T' ]
+  }) );
+
+  // function is called from within the binding context of currentCat from HTML
   this.incrementCounter = function() {
-    this.clickCount( this.clickCount() + 1 );
+    self.currentCat().clickCount( self.currentCat().clickCount() + 1 );
   }
 }
 
